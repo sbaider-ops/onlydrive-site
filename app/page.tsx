@@ -28,9 +28,11 @@ export default function OnlyDriveInvestorLanding() {
       <nav className="fixed top-0 left-0 w-full z-40 border-b border-white/10 bg-black/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-black font-black text-xl">
-              OD
-            </div>
+           <img
+  src="/logo.png"
+  alt="OnlyDrive Logo"
+  className="h-12 w-auto"
+/>
 
             <div>
               <div className="font-black text-xl">OnlyDrive</div>
