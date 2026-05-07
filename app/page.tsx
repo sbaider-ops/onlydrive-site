@@ -1,4 +1,25 @@
+import { useState } from 'react';
+
 export default function OnlyDriveInvestorLanding() {
+  const [showGate, setShowGate] = useState(false);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(false);
+
+  const investorPassword = 'OnlyDrive2026';
+
+  const handleAccess = () => {
+    if (password === investorPassword) {
+      window.open(
+        'https://drive.google.com/file/d/1GemvM3jO0yxBezc8OBVU1g2fGkmQMHeN/view?usp=sharing',
+        '_blank'
+      );
+      setShowGate(false);
+      setPassword('');
+      setError(false);
+    } else {
+      setError(true);
+    }
+  };
   const stats = [
     { number: '800K+', label: 'Driving distraction violations in Israel over 5 years' },
     { number: '4X', label: 'Higher accident risk while using a phone' },
@@ -55,7 +76,10 @@ export default function OnlyDriveInvestorLanding() {
             <a href="#team" className="hover:text-yellow-400 transition">Team</a>
           </div>
 
-          <button className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-5 py-2 rounded-xl font-semibold hover:scale-105 transition-transform">
+          <button
+            onClick={() => setShowGate(true)}
+            className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-5 py-2 rounded-xl font-semibold hover:scale-105 transition-transform"
+          >
             Investor Access
           </button>
         </div>
@@ -81,7 +105,10 @@ export default function OnlyDriveInvestorLanding() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <button className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-8 py-4 rounded-2xl font-bold hover:scale-105 transition-transform shadow-2xl shadow-yellow-500/20">
+              <button
+                onClick={() => setShowGate(true)}
+                className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-8 py-4 rounded-2xl font-bold hover:scale-105 transition-transform shadow-2xl shadow-yellow-500/20"
+              >
                 Request Investor Access
               </button>
 
@@ -387,14 +414,12 @@ export default function OnlyDriveInvestorLanding() {
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-5">
-              <a
-                href="https://drive.google.com/file/d/1GemvM3jO0yxBezc8OBVU1g2fGkmQMHeN/view?usp=sharing"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => setShowGate(true)}
                 className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-10 py-5 rounded-2xl font-black text-lg hover:scale-105 transition-transform shadow-2xl shadow-yellow-500/20 inline-block"
               >
                 Request Investor Deck
-              </a>
+              </button>
 
               <button className="border border-white/20 px-10 py-5 rounded-2xl font-semibold hover:border-yellow-500 hover:text-yellow-300 transition text-lg">
                 Schedule Introduction
@@ -416,6 +441,55 @@ export default function OnlyDriveInvestorLanding() {
           </div>
         </div>
       </footer>
+
+      {showGate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md px-6">
+          <div className="w-full max-w-md bg-zinc-950 border border-yellow-500/20 rounded-[32px] p-10 shadow-2xl shadow-yellow-500/10 relative">
+            <button
+              onClick={() => {
+                setShowGate(false);
+                setError(false);
+              }}
+              className="absolute top-5 right-5 text-zinc-500 hover:text-white text-2xl"
+            >
+              ×
+            </button>
+
+            <div className="text-yellow-400 font-semibold tracking-[0.2em] uppercase mb-4 text-center">
+              Investor Access
+            </div>
+
+            <h3 className="text-3xl font-black text-center mb-4">
+              Enter Access Code
+            </h3>
+
+            <p className="text-zinc-400 text-center mb-8 leading-relaxed">
+              This presentation contains protected pre-seed investor materials.
+            </p>
+
+            <input
+              type="password"
+              placeholder="Investor access code"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-black border border-white/10 rounded-2xl px-5 py-4 text-white outline-none focus:border-yellow-500 mb-4"
+            />
+
+            {error && (
+              <div className="text-red-400 text-sm mb-4">
+                Incorrect access code.
+              </div>
+            )}
+
+            <button
+              onClick={handleAccess}
+              className="w-full bg-gradient-to-r from-yellow-500 to-amber-300 text-black py-4 rounded-2xl font-black text-lg hover:scale-[1.02] transition-transform"
+            >
+              Access Investor Deck
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
