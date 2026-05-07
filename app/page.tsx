@@ -387,16 +387,14 @@ export default function OnlyDriveInvestorLanding() {
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-5">
-              <button className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-10 py-5 rounded-2xl font-black text-lg hover:scale-105 transition-transform shadow-2xl shadow-yellow-500/20">
-                Request Investor Deck
               <a
-  href="https://drive.google.com/file/d/1GemvM3jO0yxBezc8OBVU1g2fGkmQMHeN/view?usp=sharing"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-10 py-5 rounded-2xl font-black text-lg hover:scale-105 transition-transform shadow-2xl shadow-yellow-500/20 inline-block"
->
-  Request Investor Deck
-</a>
+                href="https://drive.google.com/file/d/1GemvM3jO0yxBezc8OBVU1g2fGkmQMHeN/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-10 py-5 rounded-2xl font-black text-lg hover:scale-105 transition-transform shadow-2xl shadow-yellow-500/20 inline-block"
+              >
+                Request Investor Deck
+              </a>
 
               <button className="border border-white/20 px-10 py-5 rounded-2xl font-semibold hover:border-yellow-500 hover:text-yellow-300 transition text-lg">
                 Schedule Introduction
