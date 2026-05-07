@@ -25,14 +25,19 @@ export default function OnlyDriveInvestorLanding() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="min-h-screen bg-black text-white overflow-hidden selection:bg-yellow-400 selection:text-black">
+
+      {/* BACKGROUND */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-200px] left-[-100px] w-[500px] h-[500px] bg-yellow-500/10 blur-3xl rounded-full" />
+        <div className="absolute bottom-[-200px] right-[-100px] w-[500px] h-[500px] bg-amber-500/10 blur-3xl rounded-full" />
+      </div>
 
       {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 w-full z-40 border-b border-white/10 bg-black/80 backdrop-blur-xl">
+      <nav className="fixed top-0 left-0 w-full z-40 border-b border-white/10 bg-black/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
 
           <div className="flex items-center gap-4">
-
             <img
               src="/logo.png"
               alt="OnlyDrive Logo"
@@ -40,7 +45,9 @@ export default function OnlyDriveInvestorLanding() {
             />
 
             <div>
-              <div className="font-black text-xl">OnlyDrive</div>
+              <div className="font-black text-xl tracking-tight">
+                OnlyDrive
+              </div>
 
               <div className="text-zinc-500 text-sm">
                 Drive Focused. Drive Safe.
@@ -48,21 +55,21 @@ export default function OnlyDriveInvestorLanding() {
             </div>
           </div>
 
-          <div className="hidden md:flex items-center gap-10 text-zinc-400 font-medium">
+          <div className="hidden md:flex items-center gap-10 text-zinc-400 font-medium text-sm">
             <a href="#problem" className="hover:text-yellow-400 transition">
               Problem
             </a>
 
-            <a href="#solution" className="hover:text-yellow-400 transition">
-              Solution
+            <a href="#vision" className="hover:text-yellow-400 transition">
+              Vision
             </a>
 
-            <a href="#market" className="hover:text-yellow-400 transition">
-              Market
+            <a href="#opportunity" className="hover:text-yellow-400 transition">
+              Opportunity
             </a>
 
-            <a href="#team" className="hover:text-yellow-400 transition">
-              Team
+            <a href="#contact" className="hover:text-yellow-400 transition">
+              Contact
             </a>
           </div>
 
@@ -76,35 +83,32 @@ export default function OnlyDriveInvestorLanding() {
       </nav>
 
       {/* HERO */}
-      <section className="min-h-screen flex items-center pt-32 px-6">
+      <section className="min-h-screen flex items-center px-6 pt-32 relative">
 
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center w-full">
 
-          {/* LEFT */}
           <div>
 
-            <div className="inline-flex border border-yellow-500/20 bg-yellow-500/10 text-yellow-400 rounded-full px-5 py-2 text-sm mb-8">
-              Pre-Seed InsureTech Startup
+            <div className="inline-flex border border-yellow-500/20 bg-yellow-500/10 text-yellow-400 rounded-full px-5 py-2 text-sm mb-10 tracking-wide">
+              Pre-Seed Mobility Safety Startup
             </div>
 
-            <h1 className="text-5xl lg:text-7xl font-black leading-[1] mb-10">
-              The New
-              <br />
-              Standard For
-              <br />
+            <h1 className="text-5xl lg:text-7xl font-black leading-[1] tracking-tight mb-10">
+            The New
+            <br />
+           Standard For
+          <br />
 
-              <span className="text-yellow-400">
-                Distraction-Free Driving
-              </span>
-            </h1>
+          <span className="text-yellow-400">
+           Distraction-Free Driving
+          </span>
+          </h1>
 
-            <p className="text-zinc-400 text-lg leading-relaxed max-w-2xl mb-12">
-              OnlyDrive combines hardware, algorithms, behavioral verification
-              and insurance intelligence into one ecosystem designed to reduce
-              distracted driving.
+            <p className="text-zinc-400 text-xl leading-relaxed max-w-2xl mb-14">
+              OnlyDrive is building a new safety layer designed to reduce distracted driving before accidents happen.
             </p>
 
-            <div className="flex flex-wrap gap-5">
+            <div className="flex flex-wrap gap-5 mb-14">
 
               <button
                 onClick={() => setShowGate(true)}
@@ -121,36 +125,39 @@ export default function OnlyDriveInvestorLanding() {
               >
                 Schedule Introduction
               </a>
+            </div>
 
+            <div className="flex items-center gap-10 text-sm text-zinc-500 flex-wrap">
+              <div>Patent Pending</div>
+              <div>Insurance Infrastructure</div>
+              <div>Behavioral Safety Platform</div>
             </div>
           </div>
 
-          {/* RIGHT */}
-          <div className="relative">
+          <div className="relative flex items-center justify-center">
 
             <div className="absolute inset-0 bg-yellow-500/10 blur-3xl rounded-full" />
 
-            <div className="relative border border-yellow-500/20 rounded-[40px] bg-gradient-to-br from-zinc-950 to-black p-10 shadow-2xl shadow-yellow-500/10">
+            <div className="relative border border-white/10 bg-gradient-to-br from-zinc-950 to-black rounded-[40px] p-12 w-full max-w-[520px] shadow-2xl shadow-yellow-500/10">
 
               <div className="aspect-square rounded-[32px] border border-white/10 bg-black flex flex-col items-center justify-center text-center p-10">
 
                 <img
                   src="/logo.png"
                   alt="OnlyDrive Logo"
-                  className="h-40 w-auto mb-8"
+                  className="h-40 w-auto mb-10"
                 />
 
-                <div className="text-3xl font-bold mb-4">
+                <div className="text-3xl font-black mb-5 tracking-tight">
                   Investor Preview Protected
                 </div>
 
-                <div className="text-zinc-500 max-w-sm leading-relaxed mb-8">
-                  Product visuals and system architecture are available only
-                  through protected investor access.
-                </div>
+                <p className="text-zinc-500 leading-relaxed max-w-sm mb-10">
+                  Product architecture, demonstrations and strategic materials are available through protected investor access.
+                </p>
 
-                <div className="border border-yellow-500/20 bg-yellow-500/10 text-yellow-400 rounded-full px-6 py-3 text-sm">
-                  Patent Pending Technology
+                <div className="border border-yellow-500/20 bg-yellow-500/10 text-yellow-400 rounded-full px-6 py-3 text-sm tracking-wide">
+                  Confidential Pre-Seed Materials
                 </div>
 
               </div>
@@ -161,214 +168,183 @@ export default function OnlyDriveInvestorLanding() {
       </section>
 
       {/* PROBLEM */}
-      <section
-        id="problem"
-        className="py-32 px-6 border-t border-white/5"
-      >
+      <section id="problem" className="py-32 px-6 border-t border-white/5">
         <div className="max-w-7xl mx-auto">
 
-          <div className="text-yellow-400 uppercase tracking-[0.2em] text-sm mb-6">
+          <div className="text-yellow-400 uppercase tracking-[0.25em] text-sm mb-6">
             The Problem
           </div>
 
-          <h2 className="text-5xl font-black mb-16 max-w-4xl leading-tight">
-            Smartphones became the most dangerous object inside modern vehicles.
+          <h2 className="text-4xl lg:text-6xl font-black max-w-5xl leading-tight mb-20 tracking-tight">
+            Software notifications failed.
+            <br />
+            Awareness campaigns failed.
+            <br />
+            Distracted driving keeps growing.
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
 
-            <div className="border border-white/10 rounded-3xl p-8 bg-zinc-950/50">
-              <div className="text-5xl font-black text-yellow-400 mb-4">
+            <div className="border border-white/10 rounded-[32px] p-10 bg-zinc-950/40 backdrop-blur-xl">
+              <div className="text-5xl font-black text-yellow-400 mb-6">
                 94%
               </div>
 
-              <div className="text-zinc-400 leading-relaxed">
+              <p className="text-zinc-400 leading-relaxed text-lg">
                 Of drivers admit using smartphones while driving.
-              </div>
+              </p>
             </div>
 
-            <div className="border border-white/10 rounded-3xl p-8 bg-zinc-950/50">
-              <div className="text-5xl font-black text-yellow-400 mb-4">
-                $129B
-              </div>
-
-              <div className="text-zinc-400 leading-relaxed">
-                Annual economic impact from distracted driving accidents.
-              </div>
-            </div>
-
-            <div className="border border-white/10 rounded-3xl p-8 bg-zinc-950/50">
-              <div className="text-5xl font-black text-yellow-400 mb-4">
+            <div className="border border-white/10 rounded-[32px] p-10 bg-zinc-950/40 backdrop-blur-xl">
+              <div className="text-5xl font-black text-yellow-400 mb-6">
                 Global
               </div>
 
-              <div className="text-zinc-400 leading-relaxed">
-                Regulatory pressure and insurer demand are accelerating adoption.
+              <p className="text-zinc-400 leading-relaxed text-lg">
+                Regulators and insurers are searching for measurable solutions.
+              </p>
+            </div>
+
+            <div className="border border-white/10 rounded-[32px] p-10 bg-zinc-950/40 backdrop-blur-xl">
+              <div className="text-5xl font-black text-yellow-400 mb-6">
+                New Era
               </div>
+
+              <p className="text-zinc-400 leading-relaxed text-lg">
+                Mobility safety is becoming a behavioral technology category.
+              </p>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* SOLUTION */}
-      <section
-        id="solution"
-        className="py-32 px-6 border-t border-white/5"
-      >
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+      {/* VISION */}
+      <section id="vision" className="py-32 px-6 border-t border-white/5">
 
-          <div>
+        <div className="max-w-6xl mx-auto text-center">
 
-            <div className="text-yellow-400 uppercase tracking-[0.2em] text-sm mb-6">
-              The Solution
-            </div>
-
-            <h2 className="text-5xl font-black mb-10 leading-tight">
-              Hardware + Software + Insurance Intelligence.
-            </h2>
-
-            <div className="space-y-6 text-zinc-400 text-lg leading-relaxed">
-
-              <p>
-                OnlyDrive creates a controlled driving environment designed to
-                eliminate dangerous phone distraction.
-              </p>
-
-              <p>
-                The platform combines physical interaction, verification systems
-                and behavioral monitoring into one scalable mobility ecosystem.
-              </p>
-
-              <p>
-                The long-term opportunity extends into insurance scoring, fleet
-                management and mobility safety infrastructure.
-              </p>
-
-            </div>
+          <div className="text-yellow-400 uppercase tracking-[0.25em] text-sm mb-6">
+            The Vision
           </div>
 
-          <div className="grid gap-6">
-
-            <div className="border border-white/10 rounded-3xl p-8 bg-zinc-950/50">
-              <div className="text-yellow-400 font-bold mb-3">
-                Hardware Layer
-              </div>
-
-              <div className="text-zinc-400">
-                Physical distraction prevention infrastructure.
-              </div>
-            </div>
-
-            <div className="border border-white/10 rounded-3xl p-8 bg-zinc-950/50">
-              <div className="text-yellow-400 font-bold mb-3">
-                Verification Engine
-              </div>
-
-              <div className="text-zinc-400">
-                Behavioral monitoring and compliance validation.
-              </div>
-            </div>
-
-            <div className="border border-white/10 rounded-3xl p-8 bg-zinc-950/50">
-              <div className="text-yellow-400 font-bold mb-3">
-                Insurance Integration
-              </div>
-
-              <div className="text-zinc-400">
-                Future insurer partnerships and risk reduction opportunities.
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* MARKET */}
-      <section
-        id="market"
-        className="py-32 px-6 border-t border-white/5"
-      >
-        <div className="max-w-7xl mx-auto text-center">
-
-          <div className="text-yellow-400 uppercase tracking-[0.2em] text-sm mb-6">
-            Market Opportunity
-          </div>
-
-          <h2 className="text-5xl font-black mb-10">
-            Positioned at the intersection of Mobility, Safety and InsureTech.
+          <h2 className="text-4xl lg:text-6xl font-black leading-tight tracking-tight mb-12">
+            Build the safety layer between drivers and distraction.
           </h2>
 
-          <p className="text-zinc-400 text-xl max-w-4xl mx-auto leading-relaxed mb-20">
-            OnlyDrive targets consumers, insurers, fleets, regulators and
-            mobility platforms seeking measurable reduction in distracted
-            driving risk.
+          <p className="text-zinc-400 text-2xl leading-relaxed max-w-4xl mx-auto mb-24">
+            OnlyDrive combines behavioral prevention, physical interaction and future insurance integration into one focused driving ecosystem.
           </p>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 text-left">
 
-            <div className="border border-white/10 rounded-3xl p-10 bg-zinc-950/50">
-              <div className="text-6xl font-black text-yellow-400 mb-4">
+            <div className="border border-white/10 rounded-[32px] p-10 bg-zinc-950/40 backdrop-blur-xl hover:border-yellow-500/30 transition">
+              <div className="text-yellow-400 font-bold text-xl mb-5">
+                Prevention
+              </div>
+
+              <p className="text-zinc-400 leading-relaxed text-lg">
+                Reduce distraction before risky behavior begins.
+              </p>
+            </div>
+
+            <div className="border border-white/10 rounded-[32px] p-10 bg-zinc-950/40 backdrop-blur-xl hover:border-yellow-500/30 transition">
+              <div className="text-yellow-400 font-bold text-xl mb-5">
+                Verification
+              </div>
+
+              <p className="text-zinc-400 leading-relaxed text-lg">
+                Create measurable driving accountability.
+              </p>
+            </div>
+
+            <div className="border border-white/10 rounded-[32px] p-10 bg-zinc-950/40 backdrop-blur-xl hover:border-yellow-500/30 transition">
+              <div className="text-yellow-400 font-bold text-xl mb-5">
+                Insurance Intelligence
+              </div>
+
+              <p className="text-zinc-400 leading-relaxed text-lg">
+                Enable future behavioral risk reduction models.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* OPPORTUNITY */}
+      <section id="opportunity" className="py-32 px-6 border-t border-white/5">
+
+        <div className="max-w-7xl mx-auto">
+
+          <div className="text-yellow-400 uppercase tracking-[0.25em] text-sm mb-6 text-center">
+            Opportunity
+          </div>
+
+          <h2 className="text-4xl lg:text-6xl font-black leading-tight tracking-tight mb-20 text-center max-w-5xl mx-auto">
+            Positioned between mobility, insurance and behavioral safety.
+          </h2>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+
+            <div className="border border-white/10 rounded-[32px] p-12 bg-zinc-950/40 backdrop-blur-xl">
+              <div className="text-6xl font-black text-yellow-400 mb-6">
                 B2C
               </div>
 
-              <div className="text-zinc-400">
-                Consumer safety and driving accountability.
-              </div>
+              <p className="text-zinc-400 text-lg leading-relaxed">
+                Consumer adoption around safer driving behavior.
+              </p>
             </div>
 
-            <div className="border border-white/10 rounded-3xl p-10 bg-zinc-950/50">
-              <div className="text-6xl font-black text-yellow-400 mb-4">
-                B2B
+            <div className="border border-white/10 rounded-[32px] p-12 bg-zinc-950/40 backdrop-blur-xl">
+              <div className="text-6xl font-black text-yellow-400 mb-6">
+                Fleet
               </div>
 
-              <div className="text-zinc-400">
-                Fleet management and enterprise mobility.
-              </div>
+              <p className="text-zinc-400 text-lg leading-relaxed">
+                Enterprise mobility and driver accountability systems.
+              </p>
             </div>
 
-            <div className="border border-white/10 rounded-3xl p-10 bg-zinc-950/50">
-              <div className="text-6xl font-black text-yellow-400 mb-4">
-                API
+            <div className="border border-white/10 rounded-[32px] p-12 bg-zinc-950/40 backdrop-blur-xl">
+              <div className="text-6xl font-black text-yellow-400 mb-6">
+                UBI
               </div>
 
-              <div className="text-zinc-400">
-                Insurance scoring and behavioral data infrastructure.
-              </div>
+              <p className="text-zinc-400 text-lg leading-relaxed">
+                Future insurance scoring and behavioral risk infrastructure.
+              </p>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* TEAM */}
-      <section
-        id="team"
-        className="py-32 px-6 border-t border-white/5"
-      >
+      {/* CONTACT */}
+      <section id="contact" className="py-32 px-6 border-t border-white/5">
+
         <div className="max-w-5xl mx-auto text-center">
 
-          <div className="text-yellow-400 uppercase tracking-[0.2em] text-sm mb-6">
-            Founder
+          <div className="text-yellow-400 uppercase tracking-[0.25em] text-sm mb-6">
+            Investor Access
           </div>
 
-          <h2 className="text-5xl font-black mb-8">
-            Built around communication, regulation and mobility insight.
+          <h2 className="text-4xl lg:text-6xl font-black leading-tight tracking-tight mb-10">
+            Building the next standard for focused driving.
           </h2>
 
-          <p className="text-zinc-400 text-xl leading-relaxed max-w-3xl mx-auto mb-16">
-            OnlyDrive is led by extensive experience in media, communications,
-            public influence and strategic positioning around transportation and
-            public safety.
+          <p className="text-zinc-400 text-2xl leading-relaxed max-w-4xl mx-auto mb-16">
+            Access the protected investor presentation or schedule a direct introduction.
           </p>
 
           <div className="flex flex-wrap justify-center gap-5">
 
             <button
               onClick={() => setShowGate(true)}
-              className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-10 py-5 rounded-2xl font-black text-lg hover:scale-105 transition-transform"
+              className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-10 py-5 rounded-2xl font-black text-lg hover:scale-105 transition-transform shadow-2xl shadow-yellow-500/20"
             >
-              Investor Access
+              Request Investor Access
             </button>
 
             <a
@@ -385,16 +361,16 @@ export default function OnlyDriveInvestorLanding() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-white/5 py-12 px-6">
+      <footer className="border-t border-white/5 py-10 px-6">
 
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-zinc-500">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-5 text-zinc-600 text-sm">
 
           <div>
             © 2026 OnlyDrive. All rights reserved.
           </div>
 
           <div>
-            Patent Pending • Investor Materials Available Upon Request
+            Confidential • Patent Pending • Investor Materials Protected
           </div>
 
         </div>
@@ -420,7 +396,7 @@ export default function OnlyDriveInvestorLanding() {
               Investor Access
             </div>
 
-            <h3 className="text-3xl font-black text-center mb-4">
+            <h3 className="text-3xl font-black text-center mb-4 tracking-tight">
               Enter Access Code
             </h3>
 
