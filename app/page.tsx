@@ -151,13 +151,14 @@ export default function OnlyDriveInvestorLanding() {
 
                 <div className="border border-yellow-500/20 bg-yellow-500/10 text-yellow-400 rounded-full px-6 py-3 text-sm tracking-wide">
                   Confidential Pre-Seed Materials
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-        </div>
+                <<a
+  href="https://drive.google.com/file/d/1zhWDwoKZyW9MymOCXVj2gCcSe5QLp6ed/view?usp=sharing"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="border border-yellow-500/20 bg-yellow-500/10 text-yellow-400 rounded-full px-6 py-3 text-sm tracking-wide hover:bg-yellow-500 hover:text-black transition"
+>
+  Open Strategic Roadmap
+</a>
       </section>
 
       {/* PROBLEM */}
