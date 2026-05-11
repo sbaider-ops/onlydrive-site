@@ -94,15 +94,8 @@ export default function OnlyDriveInvestorLanding() {
             </div>
 
             <h1 className="text-5xl lg:text-7xl font-black leading-[1] tracking-tight mb-10">
-            The New
-            <br />
-           Standard For
-          <br />
-
-          <span className="text-yellow-400">
-           Distraction-Free Driving
-          </span>
-          </h1>
+              Phones became the most dangerous object inside modern vehicles.
+            </h1>
 
             <p className="text-zinc-400 text-xl leading-relaxed max-w-2xl mb-14">
               OnlyDrive is building a new safety layer designed to reduce distracted driving before accidents happen.
