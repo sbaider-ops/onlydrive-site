@@ -1,5 +1,35 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## OnlyDrive Realtime Dashboard
+
+The site includes a connected dashboard route:
+
+```text
+/dashboard
+```
+
+Firestore paths used by the dashboard:
+
+```text
+devices/{deviceId}/live/status
+devices/{deviceId}/trips/{tripId}
+devices/{deviceId}/trips/{tripId}/events/{eventId}
+```
+
+Required Vercel environment variables:
+
+```text
+NEXT_PUBLIC_FIREBASE_API_KEY
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+NEXT_PUBLIC_FIREBASE_PROJECT_ID
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+NEXT_PUBLIC_FIREBASE_APP_ID
+NEXT_PUBLIC_ONLYDRIVE_DEVICE_ID
+```
+
+`NEXT_PUBLIC_ONLYDRIVE_DEVICE_ID` is optional. If omitted, the dashboard attempts to subscribe to the newest `devices/*/live/status` document available via a Firestore collection group query.
+
 ## Getting Started
 
 First, run the development server:

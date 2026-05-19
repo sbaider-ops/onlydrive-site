@@ -89,14 +89,27 @@ export default function OnlyDriveInvestorLanding() {
               <a href="#contact" className="hover:text-yellow-400 transition">
                 Contact
               </a>
+
+              <a href="/dashboard" className="hover:text-yellow-400 transition">
+                Dashboard
+              </a>
             </div>
 
-            <button
-              onClick={() => setShowGate(true)}
-              className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-6 py-3 rounded-2xl font-bold hover:scale-105 transition-transform"
-            >
-              Investor Access
-            </button>
+            <div className="flex items-center gap-3">
+              <a
+                href="/dashboard"
+                className="hidden sm:inline-flex border border-yellow-500/30 text-yellow-300 px-5 py-3 rounded-2xl font-bold hover:bg-yellow-500 hover:text-black transition"
+              >
+                Live Dashboard
+              </a>
+
+              <button
+                onClick={() => setShowGate(true)}
+                className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-6 py-3 rounded-2xl font-bold hover:scale-105 transition-transform"
+              >
+                Investor Access
+              </button>
+            </div>
           </div>
         </nav>
 
