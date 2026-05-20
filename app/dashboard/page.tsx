@@ -4,16 +4,18 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import {
   collection,
-  collectionGroup,
   doc,
-  getFirestore,
   limit,
   onSnapshot,
   orderBy,
   query,
   type Timestamp,
 } from 'firebase/firestore';
-import { initializeApp, getApps } from 'firebase/app';
+import {
+  firebaseEnvDiagnostics,
+  getOnlyDriveDb,
+  onlyDriveDeviceId,
+} from '@/lib/firebase';
 import {
   Activity,
   BluetoothConnected,
@@ -88,6 +90,13 @@ type RealtimeState = {
   configured: boolean;
   loading: boolean;
   error: string | null;
+  envDiagnostics: typeof firebaseEnvDiagnostics;
+  firestorePath: string | null;
+  realtimeConnected: boolean;
+  snapshotStatus: string;
+  lastSnapshotAt: Date | null;
+  lastFirestoreError: { code?: string; message: string } | null;
+  availableDeviceIds: string[];
   deviceId: string | null;
   live: LiveStatus | null;
   trip: TripStatus | null;
@@ -95,34 +104,23 @@ type RealtimeState = {
   speedPoints: SpeedPoint[];
 };
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const configured = Object.values(firebaseConfig).every(
-  (value) => typeof value === 'string' && value.length > 0,
-);
-
-const configuredDeviceId = process.env.NEXT_PUBLIC_ONLYDRIVE_DEVICE_ID || null;
-
-function getClientDb() {
-  if (!configured) {
-    return null;
-  }
-  const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-  return getFirestore(app);
-}
-
 function useOnlyDriveRealtime(): RealtimeState {
+  const configured = firebaseEnvDiagnostics.envOk;
+  const configuredDeviceId = onlyDriveDeviceId || null;
+  const firestorePath = configuredDeviceId
+    ? `devices/${configuredDeviceId}/live/status`
+    : null;
   const [state, setState] = useState<RealtimeState>({
     configured,
     loading: true,
     error: null,
+    envDiagnostics: firebaseEnvDiagnostics,
+    firestorePath,
+    realtimeConnected: false,
+    snapshotStatus: 'initializing',
+    lastSnapshotAt: null,
+    lastFirestoreError: null,
+    availableDeviceIds: [],
     deviceId: configuredDeviceId,
     live: null,
     trip: null,
@@ -131,69 +129,115 @@ function useOnlyDriveRealtime(): RealtimeState {
   });
 
   useEffect(() => {
-    const db = getClientDb();
+    console.log('[OnlyDrive Firebase] env validation result', firebaseEnvDiagnostics);
+
+    const db = getOnlyDriveDb();
     if (!configured || !db) {
       setState((current) => ({
         ...current,
         loading: false,
-        error: 'Firebase environment variables are missing.',
+        realtimeConnected: false,
+        snapshotStatus: 'env_error',
+        error: `Missing Firebase env variables: ${firebaseEnvDiagnostics.missingKeys.join(', ')}`,
       }));
       return;
     }
 
-    if (configuredDeviceId) {
-      return onSnapshot(
-        doc(db, 'devices', configuredDeviceId, 'live', 'status'),
-        (snapshot) => {
-          setState((current) => ({
-            ...current,
-            loading: false,
-            error: null,
-            deviceId: configuredDeviceId,
-            live: snapshot.exists()
-              ? ({ id: snapshot.id, ...snapshot.data() } as LiveStatus)
-              : null,
-          }));
-        },
-        (error) =>
-          setState((current) => ({
-            ...current,
-            loading: false,
-            error: error.message,
-          })),
-      );
+    console.log('[OnlyDrive Firebase] app initialized');
+
+    if (!configuredDeviceId) {
+      setState((current) => ({
+        ...current,
+        loading: false,
+        realtimeConnected: false,
+        snapshotStatus: 'missing_device_id',
+        error: 'Missing NEXT_PUBLIC_ONLYDRIVE_DEVICE_ID',
+      }));
+      return;
     }
 
-    const newestLiveQuery = query(
-      collectionGroup(db, 'live'),
-      orderBy('lastUpdatedAt', 'desc'),
-      limit(1),
-    );
+    const livePath = `devices/${configuredDeviceId}/live/status`;
+    console.log('[OnlyDrive Firestore] subscription path', livePath);
 
     return onSnapshot(
-      newestLiveQuery,
+      doc(db, 'devices', configuredDeviceId, 'live', 'status'),
       (snapshot) => {
-        const liveDoc = snapshot.docs[0];
-        const deviceRef = liveDoc?.ref.parent.parent;
+        const receivedAt = new Date();
+        const live = snapshot.exists()
+          ? ({ id: snapshot.id, ...snapshot.data() } as LiveStatus)
+          : null;
+
+        console.log('[OnlyDrive Firestore] snapshot received', {
+          path: livePath,
+          exists: snapshot.exists(),
+          data: live,
+        });
+
         setState((current) => ({
           ...current,
           loading: false,
           error: null,
-          deviceId: deviceRef?.id ?? null,
-          live: liveDoc ? ({ id: liveDoc.id, ...liveDoc.data() } as LiveStatus) : null,
+          realtimeConnected: true,
+          snapshotStatus: snapshot.exists() ? 'live_snapshot_received' : 'live_status_missing',
+          lastSnapshotAt: receivedAt,
+          lastFirestoreError: null,
+          deviceId: configuredDeviceId,
+          live,
         }));
       },
-      (error) =>
+      (error) => {
+        console.error('[OnlyDrive Firestore] snapshot error', {
+          path: livePath,
+          code: error.code,
+          message: error.message,
+        });
         setState((current) => ({
           ...current,
           loading: false,
-          error: error.message,
-        })),
+          realtimeConnected: false,
+          snapshotStatus: 'snapshot_error',
+          lastFirestoreError: { code: error.code, message: error.message },
+          error:
+            error.code === 'permission-denied'
+              ? 'Firestore permission denied. Check Firestore Rules.'
+              : `${error.code}: ${error.message}`,
+        }));
+      },
     );
   }, []);
 
   useEffect(() => {
-    const db = getClientDb();
+    const db = getOnlyDriveDb();
+    if (!configured || !db) {
+      return;
+    }
+
+    return onSnapshot(
+      collection(db, 'devices'),
+      (snapshot) => {
+        const availableDeviceIds = snapshot.docs.map((deviceDoc) => deviceDoc.id);
+        console.log('[OnlyDrive Firestore] available devices loaded', availableDeviceIds);
+        setState((current) => ({ ...current, availableDeviceIds }));
+      },
+      (error) => {
+        console.error('[OnlyDrive Firestore] available devices error', {
+          code: error.code,
+          message: error.message,
+        });
+        setState((current) => ({
+          ...current,
+          lastFirestoreError: { code: error.code, message: error.message },
+          error:
+            error.code === 'permission-denied'
+              ? 'Firestore permission denied. Check Firestore Rules.'
+              : `${error.code}: ${error.message}`,
+        }));
+      },
+    );
+  }, [configured]);
+
+  useEffect(() => {
+    const db = getOnlyDriveDb();
     if (!configured || !db || !state.deviceId) {
       return;
     }
@@ -213,12 +257,22 @@ function useOnlyDriveRealtime(): RealtimeState {
           trip: tripDoc ? ({ id: tripDoc.id, ...tripDoc.data() } as TripStatus) : null,
         }));
       },
-      (error) => setState((current) => ({ ...current, error: error.message })),
+      (error) => {
+        console.error('[OnlyDrive Firestore] trips snapshot error', {
+          code: error.code,
+          message: error.message,
+        });
+        setState((current) => ({
+          ...current,
+          lastFirestoreError: { code: error.code, message: error.message },
+          error: `${error.code}: ${error.message}`,
+        }));
+      },
     );
   }, [state.deviceId]);
 
   useEffect(() => {
-    const db = getClientDb();
+    const db = getOnlyDriveDb();
     if (!configured || !db || !state.deviceId || !state.trip?.id) {
       return;
     }
@@ -241,7 +295,17 @@ function useOnlyDriveRealtime(): RealtimeState {
           speedPoints: buildSpeedPoints(events),
         }));
       },
-      (error) => setState((current) => ({ ...current, error: error.message })),
+      (error) => {
+        console.error('[OnlyDrive Firestore] events snapshot error', {
+          code: error.code,
+          message: error.message,
+        });
+        setState((current) => ({
+          ...current,
+          lastFirestoreError: { code: error.code, message: error.message },
+          error: `${error.code}: ${error.message}`,
+        }));
+      },
     );
   }, [state.deviceId, state.trip?.id]);
 
@@ -249,8 +313,23 @@ function useOnlyDriveRealtime(): RealtimeState {
 }
 
 export default function DashboardPage() {
-  const { configured, loading, error, deviceId, live, trip, events, speedPoints } =
-    useOnlyDriveRealtime();
+  const {
+    configured,
+    loading,
+    error,
+    envDiagnostics,
+    firestorePath,
+    realtimeConnected,
+    snapshotStatus,
+    lastSnapshotAt,
+    lastFirestoreError,
+    availableDeviceIds,
+    deviceId,
+    live,
+    trip,
+    events,
+    speedPoints,
+  } = useOnlyDriveRealtime();
   const [chartMounted, setChartMounted] = useState(false);
   const connected = Boolean(live?.bleConnected && live?.esp32Connected);
   const driving = isDriving(live);
@@ -309,10 +388,32 @@ export default function DashboardPage() {
         </section>
 
         {!configured && (
-          <Notice title="Firebase env missing" detail="Add NEXT_PUBLIC_FIREBASE_* variables in Vercel." />
+          <Notice
+            title="Firebase environment variables missing"
+            detail={`Missing: ${envDiagnostics.missingKeys.join(', ') || 'none'}`}
+          />
         )}
-        {error && <Notice title="Realtime subscription issue" detail={error} />}
+        {!deviceId && (
+          <Notice
+            title="Missing NEXT_PUBLIC_ONLYDRIVE_DEVICE_ID"
+            detail="Set this variable in Vercel to the Firestore device document ID written by the Flutter app."
+          />
+        )}
+        {error && <Notice title="Firestore realtime diagnostic" detail={error} />}
         {loading && <Notice title="Connecting to Firestore" detail="Opening realtime subscriptions..." />}
+
+        <DiagnosticsPanel
+          configured={configured}
+          envDiagnostics={envDiagnostics}
+          firestorePath={firestorePath}
+          realtimeConnected={realtimeConnected}
+          snapshotStatus={snapshotStatus}
+          lastSnapshotAt={lastSnapshotAt}
+          lastFirestoreError={lastFirestoreError}
+          availableDeviceIds={availableDeviceIds}
+          deviceId={deviceId}
+          liveExists={Boolean(live)}
+        />
 
         <section className="mb-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <MetricCard
@@ -448,6 +549,111 @@ function TripSummary({ trip, live }: { trip: TripStatus | null; live: LiveStatus
         <MetricMini label="Start Speed" value={`${formatNumber(trip?.startGpsSpeedKmh)} km/h`} />
         <MetricMini label="Current Speed" value={`${formatNumber(live?.gpsSpeedKmh)} km/h`} />
       </div>
+    </div>
+  );
+}
+
+function DiagnosticsPanel({
+  configured,
+  envDiagnostics,
+  firestorePath,
+  realtimeConnected,
+  snapshotStatus,
+  lastSnapshotAt,
+  lastFirestoreError,
+  availableDeviceIds,
+  deviceId,
+  liveExists,
+}: {
+  configured: boolean;
+  envDiagnostics: typeof firebaseEnvDiagnostics;
+  firestorePath: string | null;
+  realtimeConnected: boolean;
+  snapshotStatus: string;
+  lastSnapshotAt: Date | null;
+  lastFirestoreError: { code?: string; message: string } | null;
+  availableDeviceIds: string[];
+  deviceId: string | null;
+  liveExists: boolean;
+}) {
+  const missingLiveStatus = Boolean(deviceId && !liveExists && !lastFirestoreError);
+
+  return (
+    <section className="mb-4 rounded-[28px] border border-yellow-400/20 bg-yellow-400/[0.055] p-5 shadow-2xl shadow-black/35">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-yellow-300">
+            Runtime Diagnostics
+          </p>
+          <h2 className="mt-1 text-xl font-black text-white">Firebase / Firestore</h2>
+        </div>
+        <StatusPill
+          label={realtimeConnected ? 'REALTIME CONNECTED' : 'REALTIME WAITING'}
+          active={realtimeConnected}
+        />
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <DiagnosticItem label="Firebase initialized" value={configured ? 'true' : 'false'} />
+        <DiagnosticItem label="Env OK" value={envDiagnostics.envOk ? 'true' : 'false'} />
+        <DiagnosticItem label="Project ID" value={envDiagnostics.projectId ?? '-'} />
+        <DiagnosticItem label="Auth Domain" value={envDiagnostics.authDomain ?? '-'} />
+        <DiagnosticItem label="Device ID" value={deviceId ?? 'MISSING'} />
+        <DiagnosticItem label="Firestore Path" value={firestorePath ?? '-'} />
+        <DiagnosticItem label="Snapshot Status" value={snapshotStatus} />
+        <DiagnosticItem
+          label="Last Snapshot"
+          value={lastSnapshotAt ? lastSnapshotAt.toLocaleTimeString() : '-'}
+        />
+      </div>
+
+      <div className="mt-4 grid gap-3 lg:grid-cols-2">
+        <pre className="overflow-auto rounded-2xl border border-white/10 bg-black/40 p-4 text-xs leading-5 text-zinc-300">
+          {JSON.stringify(
+            {
+              envKeysExist: envDiagnostics.keys,
+              missingEnvVariables: envDiagnostics.missingKeys,
+              apiKeyExists: envDiagnostics.keys.NEXT_PUBLIC_FIREBASE_API_KEY,
+              projectId: envDiagnostics.projectId,
+              authDomain: envDiagnostics.authDomain,
+              deviceId: envDiagnostics.deviceId,
+            },
+            null,
+            2,
+          )}
+        </pre>
+        <pre className="overflow-auto rounded-2xl border border-white/10 bg-black/40 p-4 text-xs leading-5 text-zinc-300">
+          {JSON.stringify(
+            {
+              watching: firestorePath,
+              realtimeConnected,
+              snapshotStatus,
+              lastFirestoreError,
+              permissionHint:
+                lastFirestoreError?.code === 'permission-denied'
+                  ? 'Firestore permission denied. Check Firestore Rules.'
+                  : null,
+              noLiveStatusHint: missingLiveStatus
+                ? 'No live status found for selected deviceId.'
+                : null,
+              availableDevices: availableDeviceIds,
+            },
+            null,
+            2,
+          )}
+        </pre>
+      </div>
+    </section>
+  );
+}
+
+function DiagnosticItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-h-20 rounded-2xl border border-white/10 bg-black/35 p-4">
+      <span className="block text-[11px] font-black uppercase tracking-[0.08em] text-zinc-500">
+        {label}
+      </span>
+      <strong className="mt-2 block break-words text-sm font-black text-zinc-50">{value}</strong>
     </div>
   );
 }
