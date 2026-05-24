@@ -93,9 +93,20 @@ export default function OnlyDriveInvestorLanding() {
               <a href="/dashboard" className="hover:text-yellow-400 transition">
                 Dashboard
               </a>
+
+              <a href="/data" className="hover:text-yellow-400 transition">
+                DATA
+              </a>
             </div>
 
             <div className="flex items-center gap-3">
+              <a
+                href="/data"
+                className="hidden lg:inline-flex border border-white/10 text-zinc-300 px-5 py-3 rounded-2xl font-bold hover:border-yellow-500/40 hover:text-yellow-300 transition"
+              >
+                DATA
+              </a>
+
               <a
                 href="/dashboard"
                 className="hidden sm:inline-flex border border-yellow-500/30 text-yellow-300 px-5 py-3 rounded-2xl font-bold hover:bg-yellow-500 hover:text-black transition"

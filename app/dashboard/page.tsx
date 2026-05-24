@@ -362,6 +362,12 @@ export default function DashboardPage() {
             >
               Home
             </Link>
+            <Link
+              href="/data"
+              className="hidden rounded-full border border-white/10 px-4 py-2 text-sm font-bold text-zinc-400 transition hover:border-yellow-400/50 hover:text-yellow-300 sm:inline-flex"
+            >
+              DATA
+            </Link>
             <StatusPill label={connected ? 'DEVICE ONLINE' : 'WAITING'} active={connected} />
           </div>
         </div>
