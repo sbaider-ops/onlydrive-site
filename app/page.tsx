@@ -13,7 +13,7 @@ export default function OnlyDriveInvestorLanding() {
   const handleAccess = () => {
     if (password === investorPassword) {
       window.open(
-        'https://drive.google.com/file/d/1GemvM3jO0yxBezc8OBVU1g2fGkmQMHeN/view?usp=sharing',
+        'https://drive.google.com/file/d/15ZVZ2TQazA1cTkiemBfnEI88L7rFZ7N1/view?usp=sharing',
         '_blank'
       );
 
