@@ -363,7 +363,7 @@ export default function DataPage() {
               <strong className="text-white">Dashboard reading: </strong>
               If official cellphone deaths are taken alone, the smartphone effect appears modest.
               If modeled underreporting is added, smartphones and in-vehicle screens become a
-              much larger road-safety burden.
+              a larger road-safety concern that may warrant further validation.
             </div>
           </section>
         </section>

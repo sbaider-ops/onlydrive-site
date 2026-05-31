@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Script from 'next/script';
 
 export default function OnlyDriveInvestorLanding() {
   const [showGate, setShowGate] = useState(false);
@@ -27,22 +26,6 @@ export default function OnlyDriveInvestorLanding() {
 
   return (
     <>
-      {/* GOOGLE ANALYTICS */}
-      <Script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-Z6LH6QGHKT"
-        strategy="afterInteractive"
-      />
-
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-Z6LH6QGHKT');
-        `}
-      </Script>
-
       <div className="min-h-screen bg-black text-white overflow-hidden selection:bg-yellow-400 selection:text-black">
 
         {/* BACKGROUND */}
@@ -116,6 +99,7 @@ export default function OnlyDriveInvestorLanding() {
 
               <button
                 onClick={() => setShowGate(true)}
+                aria-label="Open investor access form"
                 className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-6 py-3 rounded-2xl font-bold hover:scale-105 transition-transform"
               >
                 Investor Access
@@ -148,13 +132,14 @@ export default function OnlyDriveInvestorLanding() {
               </h1>
 
               <p className="text-zinc-400 text-xl leading-relaxed max-w-2xl mb-14">
-                OnlyDrive is building a new safety layer designed to reduce distracted driving before accidents happen.
+                OnlyDrive is building a technology layer designed to support focused driving and help address distracted-driving risk.
               </p>
 
               <div className="flex flex-wrap gap-5 mb-14">
 
                 <button
                   onClick={() => setShowGate(true)}
+                  aria-label="Open investor access form"
                   className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-10 py-5 rounded-2xl font-black text-lg hover:scale-105 transition-transform shadow-2xl shadow-yellow-500/20"
                 >
                   Request Investor Access
@@ -173,8 +158,8 @@ export default function OnlyDriveInvestorLanding() {
 
               <div className="flex items-center gap-10 text-sm text-zinc-500 flex-wrap">
                 <div>Patent Pending</div>
-                <div>Insurance Infrastructure</div>
-                <div>Behavioral Safety Platform</div>
+                <div>Insurance-Ready Workflows</div>
+                <div>Behavioral Technology Platform</div>
               </div>
             </div>
 
@@ -226,11 +211,11 @@ export default function OnlyDriveInvestorLanding() {
             </div>
 
             <h2 className="text-4xl lg:text-6xl font-black max-w-5xl leading-tight mb-20 tracking-tight">
-              Software notifications failed.
+              Software notifications are limited.
               <br />
-              Awareness campaigns failed.
+              Awareness campaigns have limits.
               <br />
-              Distracted driving keeps growing.
+              Distracted driving remains a major challenge.
             </h2>
 
             <div className="grid md:grid-cols-3 gap-8">
@@ -251,7 +236,7 @@ export default function OnlyDriveInvestorLanding() {
                 </div>
 
                 <p className="text-zinc-400 leading-relaxed text-lg">
-                  Regulators and insurers are searching for measurable solutions.
+                  Regulators and insurers may benefit from measurable, validated solutions.
                 </p>
               </div>
 
@@ -290,6 +275,7 @@ export default function OnlyDriveInvestorLanding() {
 
               <button
                 onClick={() => setShowGate(true)}
+                aria-label="Open investor access form"
                 className="bg-gradient-to-r from-yellow-500 to-amber-300 text-black px-10 py-5 rounded-2xl font-black text-lg hover:scale-105 transition-transform shadow-2xl shadow-yellow-500/20"
               >
                 Request Investor Access
@@ -308,22 +294,6 @@ export default function OnlyDriveInvestorLanding() {
           </div>
         </section>
 
-        {/* FOOTER */}
-        <footer className="border-t border-white/5 py-10 px-6">
-
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-5 text-zinc-600 text-sm">
-
-            <div>
-              © 2026 OnlyDrive. All rights reserved.
-            </div>
-
-            <div>
-              Confidential • Patent Pending • Investor Materials Protected
-            </div>
-
-          </div>
-        </footer>
-
         {/* PASSWORD GATE */}
         {showGate && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md px-6">
@@ -335,7 +305,9 @@ export default function OnlyDriveInvestorLanding() {
                   setShowGate(false);
                   setError(false);
                 }}
+                aria-label="Close investor access dialog"
                 className="absolute top-5 right-5 text-zinc-500 hover:text-white text-2xl"
+                type="button"
               >
                 ×
               </button>
@@ -352,7 +324,12 @@ export default function OnlyDriveInvestorLanding() {
                 This presentation contains protected pre-seed investor materials.
               </p>
 
+              <label className="mb-2 block text-sm font-bold text-zinc-300" htmlFor="investor-access-code">
+                Investor access code
+              </label>
+
               <input
+                id="investor-access-code"
                 type="password"
                 placeholder="Investor access code"
                 value={password}
@@ -369,6 +346,7 @@ export default function OnlyDriveInvestorLanding() {
               <button
                 onClick={handleAccess}
                 className="w-full bg-gradient-to-r from-yellow-500 to-amber-300 text-black py-4 rounded-2xl font-black text-lg hover:scale-[1.02] transition-transform"
+                type="button"
               >
                 Access Investor Deck
               </button>

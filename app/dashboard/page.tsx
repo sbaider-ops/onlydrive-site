@@ -380,7 +380,7 @@ export default function DashboardPage() {
               OnlyDrive Cloud
             </p>
             <h1 className="max-w-4xl text-5xl font-black leading-[0.95] tracking-tight md:text-7xl">
-              Realtime enforcement dashboard.
+              Realtime platform dashboard.
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-zinc-400">
               Live Firestore telemetry for BLE connectivity, qualified driving state,
